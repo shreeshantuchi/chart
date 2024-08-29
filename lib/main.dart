@@ -1,5 +1,8 @@
 import 'package:custom_chart/pages/chart_page.dart';
+import 'package:custom_chart/pages/form_validation_page.dart';
+import 'package:custom_chart/pages/test_page.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ChartPage(),
+      home: const FormFields(),
     );
   }
 }

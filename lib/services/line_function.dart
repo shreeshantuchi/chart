@@ -9,8 +9,8 @@ class LineFunction {
         titlesData: const FlTitlesData(show: false),
         borderData: FlBorderData(show: false),
         lineBarsData: lineBarsData(data, color),
-        minX: -1,
-        maxX: data.length.toDouble(),
+        // minX: -1,
+
         maxY: data.reduce((a, b) => a > b ? a : b).toDouble(),
         minY: 0,
       );
@@ -19,7 +19,7 @@ class LineFunction {
 
   LineChartBarData lineChartBarData(List<int> data, Color color) =>
       LineChartBarData(
-        curveSmoothness: 0.4,
+        curveSmoothness: 0.3,
         isCurved: true,
         color: color,
         barWidth: 4,

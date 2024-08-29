@@ -1,6 +1,7 @@
 import 'package:custom_chart/services/bar_function.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CustomBarChart extends StatelessWidget {
   final double height;
@@ -9,7 +10,6 @@ class CustomBarChart extends StatelessWidget {
   final Color barColor;
 
   // Move ValueNotifier to a class-level final variable
-  final ValueNotifier<List<int>> valueNotifier;
 
   CustomBarChart({
     super.key,
@@ -17,7 +17,8 @@ class CustomBarChart extends StatelessWidget {
     required this.height,
     required this.width,
     this.barColor = Colors.indigo,
-  }) : valueNotifier = ValueNotifier(dataValue[dataValue.keys.first]);
+  });
+  final stream = BehaviorSubject<String>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class CustomBarChart extends StatelessWidget {
           ),
         )
         .toList();
-    final ValueNotifier<String> keyValue = ValueNotifier(bootomTileValue.first);
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(width / height * 10),
@@ -46,11 +47,13 @@ class CustomBarChart extends StatelessWidget {
               width: width,
               child: AspectRatio(
                 aspectRatio: height / width,
-                child: ValueListenableBuilder(
-                    valueListenable: valueNotifier,
-                    builder: (context, value, child) {
+                child: StreamBuilder(
+                    stream: stream,
+                    initialData: dataValue.keys.toList()[0],
+                    builder: (context, snapshot) {
                       return BarChart(
-                        BarFunction().mainBarData(value, barColor),
+                        BarFunction()
+                            .mainBarData(dataValue[snapshot.data], barColor),
                       );
                     }),
               ),
@@ -64,16 +67,15 @@ class CustomBarChart extends StatelessWidget {
                   children: List.generate(bootomTileValue.length, (index) {
                     return GestureDetector(
                       onTap: () {
-                        keyValue.value = bootomTileValue[index];
-                        // print(dataValue[dataValue.keys.toList()[index]]);
-                        valueNotifier.value =
-                            dataValue[dataValue.keys.toList()[index]];
+                        stream.add(dataValue.keys.toList()[index]);
                       },
-                      child: ValueListenableBuilder(
-                        valueListenable: keyValue,
-                        builder: (context, value, child) {
+                      child: StreamBuilder(
+                        stream: stream,
+                        initialData: bootomTileValue.first,
+                        builder: (context, snapshot) {
                           return Text(bootomTileValue[index],
-                              style: bootomTileValue[index] == value
+                              style: bootomTileValue[index] ==
+                                      snapshot.data!.substring(0, 3)
                                   ? TextStyle(
                                       color: barColor,
                                       fontWeight: FontWeight.bold)
